@@ -1,0 +1,527 @@
+
+import tkinter as tk
+from tkinter import messagebox
+
+# ==========================================
+# CONFIGURACAO
+# ==========================================
+
+SENHA_CORRETA = "0987654321"
+CONTACTO = "867474379"
+
+BG = "#080B12"
+CARD = "#111827"
+BORDER = "#263244"
+WHITE = "#F8FAFC"
+MUTED = "#94A3B8"
+BLUE = "#087BFF"
+BLUE_DARK = "#0750B8"
+GREEN = "#16A34A"
+RED = "#DC2626"
+YELLOW = "#FACC15"
+
+# ==========================================
+# JANELA PRINCIPAL
+# ==========================================
+
+janela = tk.Tk()
+janela.title("SX TECH E DESIGN")
+janela.configure(bg=BG)
+janela.state("zoomed")
+janela.minsize(800, 600)
+
+
+def criar_label(
+    pai, texto, tamanho=11, cor=WHITE,
+    negrito=False, fundo=None, **kwargs
+):
+    return tk.Label(
+        pai,
+        text=texto,
+        font=(
+            "Segoe UI",
+            tamanho,
+            "bold" if negrito else "normal"
+        ),
+        fg=cor,
+        bg=fundo or pai.cget("bg"),
+        **kwargs
+    )
+
+
+def criar_botao(pai, texto, cor, comando):
+    return tk.Button(
+        pai,
+        text=texto,
+        font=("Segoe UI", 12, "bold"),
+        bg=cor,
+        fg=WHITE,
+        activebackground=cor,
+        activeforeground=WHITE,
+        relief="flat",
+        bd=0,
+        cursor="hand2",
+        pady=12,
+        padx=12,
+        command=comando
+    )
+
+
+# ==========================================
+# CABECALHO
+# ==========================================
+
+cabecalho = tk.Frame(janela, bg=BG)
+cabecalho.pack(fill="x", padx=30, pady=(20, 12))
+
+criar_label(
+    cabecalho, "SX", 30, BLUE, True
+).pack(side="left", padx=(0, 14))
+
+identificacao = tk.Frame(cabecalho, bg=BG)
+identificacao.pack(side="left")
+
+criar_label(
+    identificacao,
+    "SYSTEM CONTROL",
+    20,
+    WHITE,
+    True
+).pack(anchor="w")
+
+criar_label(
+    identificacao,
+    "TECNOLOGIA E CONTROLO",
+    10,
+    MUTED
+).pack(anchor="w", pady=(4, 0))
+
+tk.Label(
+    cabecalho,
+    text="  SX TECH E DESIGN  ",
+    font=("Segoe UI", 10, "bold"),
+    bg="#102B4E",
+    fg="#60A5FA",
+    padx=10,
+    pady=9
+).pack(side="right")
+
+
+# ==========================================
+# CONTEUDO PRINCIPAL
+# ==========================================
+
+conteudo = tk.Frame(janela, bg=BG)
+conteudo.pack(
+    fill="both",
+    expand=True,
+    padx=30,
+    pady=5
+)
+
+
+# ==========================================
+# CARTAO PRINCIPAL
+# ==========================================
+
+alerta_card = tk.Frame(
+    conteudo,
+    bg=CARD,
+    highlightbackground=BORDER,
+    highlightthickness=1
+)
+alerta_card.pack(fill="x", pady=(0, 12))
+
+criar_label(
+    alerta_card,
+    "SYSTEM ALERT",
+    26,
+    RED,
+    True
+).pack(pady=(15, 3))
+
+criar_label(
+    alerta_card,
+    "SYSTEM STATUS",
+    12,
+    YELLOW,
+    True
+).pack(pady=3)
+
+criar_label(
+    alerta_card,
+    "Bem-vindo ao sistema.",
+    12,
+    MUTED
+).pack(pady=(3, 15))
+
+
+# ==========================================
+# ESTADO DO SISTEMA
+# ==========================================
+
+estado_card = tk.Frame(
+    conteudo,
+    bg=CARD,
+    highlightbackground=BORDER,
+    highlightthickness=1
+)
+estado_card.pack(fill="x", pady=(0, 12))
+
+criar_label(
+    estado_card,
+    "ESTADO DO SISTEMA",
+    11,
+    MUTED,
+    True
+).pack(anchor="w", padx=20, pady=(12, 3))
+
+estado = criar_label(
+    estado_card,
+    "SISTEMA EM ESPERA",
+    17,
+    GREEN,
+    True
+)
+estado.pack(anchor="w", padx=20, pady=3)
+
+criar_label(
+    estado_card,
+    f"Contacto: {CONTACTO}",
+    12,
+    MUTED
+).pack(anchor="w", padx=20, pady=(3, 12))
+
+
+# ==========================================
+# JANELA DE PAGAMENTO
+# ==========================================
+
+def mostrar_demonstracao():
+    pagamento = tk.Toplevel(janela)
+    pagamento.title("Comprovativo de pagamento")
+    pagamento.geometry("460x420")
+    pagamento.configure(bg=BG)
+    pagamento.resizable(False, False)
+
+    pagamento.update_idletasks()
+
+    largura = 460
+    altura = 420
+    x = (pagamento.winfo_screenwidth() - largura) // 2
+    y = (pagamento.winfo_screenheight() - altura) // 2
+
+    pagamento.geometry(
+        f"{largura}x{altura}+{x}+{y}"
+    )
+
+    tk.Frame(
+        pagamento,
+        bg=BLUE,
+        height=5
+    ).pack(fill="x")
+
+    criar_label(
+        pagamento,
+        "COMPROVATIVO",
+        22,
+        WHITE,
+        True
+    ).pack(pady=(12, 2))
+
+    criar_label(
+        pagamento,
+        "INFORMACAO DE PAGAMENTO",
+        11,
+        BLUE,
+        True
+    ).pack(pady=(0, 10))
+
+    detalhes = tk.Frame(
+        pagamento,
+        bg=CARD,
+        highlightbackground=BORDER,
+        highlightthickness=1
+    )
+    detalhes.pack(fill="x", padx=25)
+
+    criar_label(
+        detalhes,
+        "VALOR",
+        10,
+        MUTED,
+        True
+    ).pack(pady=(10, 1))
+
+    criar_label(
+        detalhes,
+        "50 MT",
+        26,
+        GREEN,
+        True
+    ).pack(pady=1)
+
+    criar_label(
+        detalhes,
+        f"Numero: {CONTACTO}",
+        11,
+        WHITE
+    ).pack(pady=3)
+
+    criar_label(
+        detalhes,
+        "Estado: Pendente de confirmacao",
+        10,
+        YELLOW,
+        True
+    ).pack(pady=(3, 10))
+
+    criar_label(
+        pagamento,
+        "SX TECH E DESIGN",
+        11,
+        MUTED,
+        True
+    ).pack(pady=9)
+
+    def confirmar():
+        janela.destroy()
+
+    criar_botao(
+        pagamento,
+        "OK | FECHAR PROGRAMA",
+        BLUE_DARK,
+        confirmar
+    ).pack(
+        side="bottom",
+        fill="x",
+        padx=45,
+        pady=12
+    )
+
+    pagamento.transient(janela)
+    pagamento.grab_set()
+    pagamento.focus_force()
+
+
+# ==========================================
+# AUTENTICACAO
+# ==========================================
+
+def clicar_sim():
+    senha_janela = tk.Toplevel(janela)
+    senha_janela.title("Autenticacao")
+    senha_janela.geometry("400x270")
+    senha_janela.configure(bg=CARD)
+    senha_janela.resizable(False, False)
+
+    senha_janela.update_idletasks()
+
+    x = (
+        senha_janela.winfo_screenwidth() - 400
+    ) // 2
+
+    y = (
+        senha_janela.winfo_screenheight() - 270
+    ) // 2
+
+    senha_janela.geometry(f"400x270+{x}+{y}")
+
+    criar_label(
+        senha_janela,
+        "AUTENTICACAO",
+        21,
+        WHITE,
+        True
+    ).pack(pady=(23, 7))
+
+    criar_label(
+        senha_janela,
+        "Introduza a palavra-passe",
+        12,
+        MUTED
+    ).pack(pady=5)
+
+    entrada = tk.Entry(
+        senha_janela,
+        show="*",
+        font=("Segoe UI", 16),
+        justify="center",
+        bg=BG,
+        fg=WHITE,
+        insertbackground=WHITE,
+        relief="flat"
+    )
+    entrada.pack(
+        padx=35,
+        fill="x",
+        ipady=9,
+        pady=12
+    )
+    entrada.focus_set()
+
+    def verificar():
+        if entrada.get() == SENHA_CORRETA:
+            senha_janela.destroy()
+
+            estado.config(
+                text="ACESSO AUTORIZADO",
+                fg=GREEN
+            )
+
+            mostrar_demonstracao()
+
+        else:
+            messagebox.showerror(
+                "Erro",
+                "Palavra-passe incorrecta.",
+                parent=senha_janela
+            )
+
+            entrada.delete(0, tk.END)
+            entrada.focus_set()
+
+    criar_botao(
+        senha_janela,
+        "CONFIRMAR",
+        BLUE_DARK,
+        verificar
+    ).pack(fill="x", padx=35, pady=8)
+
+    entrada.bind(
+        "<Return>",
+        lambda event: verificar()
+    )
+
+
+# ==========================================
+# BOTOES SIM E NAO
+# ==========================================
+
+botoes = tk.Frame(conteudo, bg=BG)
+botoes.pack(fill="x", pady=(0, 12))
+
+botoes.columnconfigure(0, weight=1)
+botoes.columnconfigure(1, weight=1)
+
+
+def clicar_nao():
+    estado.config(
+        text="OPERACAO CANCELADA",
+        fg=RED
+    )
+
+
+criar_botao(
+    botoes,
+    "SIM | CONTINUAR",
+    GREEN,
+    clicar_sim
+).grid(
+    row=0,
+    column=0,
+    padx=(0, 8),
+    sticky="ew"
+)
+
+criar_botao(
+    botoes,
+    "NAO | CANCELAR",
+    RED,
+    clicar_nao
+).grid(
+    row=0,
+    column=1,
+    padx=(8, 0),
+    sticky="ew"
+)
+
+
+# ==========================================
+# PUBLICIDADE
+# ==========================================
+
+anuncio = tk.Frame(
+    conteudo,
+    bg="#050810",
+    highlightbackground=BLUE,
+    highlightthickness=1
+)
+anuncio.pack(
+    fill="both",
+    expand=True,
+    pady=(5, 12)
+)
+
+criar_label(
+    anuncio,
+    "SX",
+    30,
+    BLUE,
+    True
+).pack(pady=(12, 0))
+
+criar_label(
+    anuncio,
+    "TECH E DESIGN",
+    22,
+    WHITE,
+    True
+).pack(pady=2)
+
+criar_label(
+    anuncio,
+    "TECNOLOGIA  •  DESIGN  •  SOLUCOES",
+    10,
+    BLUE,
+    True
+).pack(pady=4)
+
+criar_label(
+    anuncio,
+    "INFORMATICA  |  DESIGN GRAFICO\n"
+    "SUPORTE TECNICO  |  SOLUCOES DIGITAIS",
+    10,
+    WHITE,
+    justify="center"
+).pack(pady=5)
+
+criar_label(
+    anuncio,
+    "As suas ideias, a nossa tecnologia.",
+    12,
+    MUTED
+).pack(pady=4)
+
+criar_label(
+    anuncio,
+    f"CONTACTO: {CONTACTO}",
+    10,
+    BLUE,
+    True
+).pack(pady=(4, 12))
+
+
+# ==========================================
+# RODAPE
+# ==========================================
+
+criar_label(
+    janela,
+    "TRABALHO DA SX TECH E DESIGN",
+    9,
+    MUTED
+).pack(pady=(0, 10))
+
+
+# ==========================================
+# INICIAR A APLICACAO
+# ==========================================
+
+def trazer_para_frente():
+    janela.lift()
+    janela.focus_force()
+
+
+janela.after(500, trazer_para_frente)
+janela.mainloop()
