@@ -1,0 +1,224 @@
+import tkinter as tk
+from tkinter import messagebox, simpledialog
+
+# CONFIGURACOES
+SENHA = "0987654321"
+CONTACTO = "867474379"
+MAX_TENTATIVAS = 3
+
+tentativas = 0
+bloqueado = False
+
+
+# VERIFICAR PALAVRA-PASSE
+def verificar_senha():
+    global tentativas, bloqueado
+
+    if bloqueado:
+        return False
+
+    senha = simpledialog.askstring(
+        "Confirmacao",
+        "Introduz a palavra-passe:",
+        show="*",
+        parent=janela
+    )
+
+    if senha is None:
+        return False
+
+    if senha == SENHA:
+        tentativas = 0
+        return True
+
+    tentativas += 1
+    restantes = MAX_TENTATIVAS - tentativas
+
+    if restantes > 0:
+        messagebox.showerror(
+            "Erro",
+            f"Palavra-passe incorreta!\nTentativas restantes: {restantes}",
+            parent=janela
+        )
+    else:
+        bloqueado = True
+        messagebox.showerror(
+            "Acesso bloqueado",
+            "Excedeste as 3 tentativas. O programa sera encerrado.",
+            parent=janela
+        )
+        janela.destroy()
+
+    return False
+
+
+# BOTAO SIM
+def resposta_sim():
+    if not verificar_senha():
+        return
+
+    mensagem.config(
+        text="PAGAMENTO CONCLUIDO",
+        fg="#15803D"
+    )
+
+    detalhes.config(
+        text="Confirmacao apresentada com sucesso."
+    )
+
+    comprovativo.config(
+        text=(
+            "================================\n"
+            "          COMPROVATIVO\n"
+            "================================\n\n"
+            "Estado: CONFIRMADO\n"
+            "Referencia: VAL-867474379\n"
+            "Responsavel: Shelton\n\n"
+            "================================"
+        )
+    )
+
+    botao_sim.pack_forget()
+    botao_nao.pack_forget()
+    botao_confirmar.pack(pady=12)
+
+
+# BOTAO NAO
+def resposta_nao():
+    mensagem.config(
+        text="OPERACAO NAO CONFIRMADA",
+        fg="#B91C1C"
+    )
+
+    detalhes.config(
+        text=f"Contacto: {CONTACTO}"
+    )
+
+    comprovativo.config(text="")
+
+
+# CONFIRMAR RECEBIMENTO
+def confirmar_recebimento():
+    if not verificar_senha():
+        return
+
+    mensagem.config(
+        text="CONFIRMACAO FINAL",
+        fg="#15803D"
+    )
+
+    detalhes.config(
+        text="Confirmacao registada no programa."
+    )
+
+    comprovativo.config(
+        text=(
+            "================================\n"
+            "       CONFIRMACAO FINAL\n"
+            "================================\n\n"
+            "Estado: Confirmado\n"
+            "Responsavel: Shelton\n"
+            "Referencia: VAL-867474379\n\n"
+            "================================"
+        )
+    )
+
+    botao_confirmar.pack_forget()
+
+
+# JANELA PRINCIPAL
+janela = tk.Tk()
+janela.title("Confirmacao de Valor")
+janela.geometry("480x540")
+janela.configure(bg="#F3F4F6")
+janela.resizable(False, False)
+
+titulo = tk.Label(
+    janela,
+    text="CONFIRMACAO DE VALOR",
+    font=("Arial", 18, "bold"),
+    bg="#F3F4F6",
+    fg="#111827"
+)
+titulo.pack(pady=25)
+
+mensagem = tk.Label(
+    janela,
+    text="OPERACAO PENDENTE",
+    font=("Arial", 17, "bold"),
+    bg="#F3F4F6",
+    fg="#D97706",
+    wraplength=430
+)
+mensagem.pack(pady=12)
+
+detalhes = tk.Label(
+    janela,
+    text="Desejas confirmar a operacao?",
+    font=("Arial", 12),
+    bg="#F3F4F6",
+    fg="#374151"
+)
+detalhes.pack(pady=8)
+
+botao_sim = tk.Button(
+    janela,
+    text="SIM, CONFIRMAR",
+    command=resposta_sim,
+    font=("Arial", 12, "bold"),
+    bg="#16A34A",
+    fg="white",
+    activebackground="#15803D",
+    activeforeground="white",
+    width=24,
+    height=2
+)
+botao_sim.pack(pady=10)
+
+botao_nao = tk.Button(
+    janela,
+    text="NAO",
+    command=resposta_nao,
+    font=("Arial", 12, "bold"),
+    bg="#16A34A",
+    fg="white",
+    activebackground="#15803D",
+    activeforeground="white",
+    width=24,
+    height=2
+)
+botao_nao.pack(pady=5)
+
+detalhes_contacto = tk.Label(
+    janela,
+    text="",
+    font=("Arial", 11),
+    bg="#F3F4F6",
+    fg="#111827"
+)
+detalhes_contacto.pack()
+
+comprovativo = tk.Label(
+    janela,
+    text="",
+    font=("Consolas", 10),
+    bg="#F3F4F6",
+    fg="#111827",
+    justify="left"
+)
+comprovativo.pack(pady=12)
+
+botao_confirmar = tk.Button(
+    janela,
+    text="CONFIRMAR RECEBIMENTO",
+    command=confirmar_recebimento,
+    font=("Arial", 11, "bold"),
+    bg="#16A34A",
+    fg="white",
+    activebackground="#15803D",
+    activeforeground="white",
+    width=24,
+    height=2
+)
+
+janela.mainloop()
